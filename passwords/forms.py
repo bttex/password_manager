@@ -32,4 +32,9 @@ class RegisterForm(UserCreationForm):
 class PasswordForm(forms.ModelForm):
     class Meta:
         model = Password
-        fields = ['service_name', 'login', 'password_value', 'category']  # Use 'password_value' em vez de 'password'
+        fields = ['site', 'username', 'encrypted_password']
+        labels = {
+            'site': 'Site',
+            'username': 'Username',
+            'encrypted_password': 'Password'
+        }

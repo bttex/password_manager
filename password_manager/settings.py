@@ -35,7 +35,7 @@ ALLOWED_HOSTS = []
 # ...código existente...
 
 # Adicione a chave de criptografia do ambiente
-ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY')
+ENCRYPTION_KEY = os.getenv('ENCRYPTION_KEY').encode()
 
 # ...código existente...
 # Application definition

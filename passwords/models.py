@@ -13,28 +13,26 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 cipher_suite = Fernet(settings.ENCRYPTION_KEY)
 
 class Password(models.Model):
-    CATEGORY_CHOICES = [
-        ('work', 'Work'),
-        ('personal', 'Personal'),
-        ('other', 'Other'),
-    ]
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='passwords')
-    service_name = models.CharField(max_length=255)
-    login = models.CharField(max_length=255)
-    password_value = models.CharField(max_length=255)  # Certifique-se de que este campo está definido
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='other')
+    user = models.ForeignKey(
+        User, 
+        on_delete=models.CASCADE,
+        related_name='stored_passwords'
+    )
+    site = models.CharField(max_length=100)
+    username = models.CharField(max_length=100)
+    encrypted_password = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def set_password(self, raw_password):
         encrypted_password = cipher_suite.encrypt(raw_password.encode())
-        self.password_value = base64.urlsafe_b64encode(encrypted_password).decode()
+        self.encrypted_password = base64.urlsafe_b64encode(encrypted_password).decode()
 
     def get_password(self):
-        return self.password_value
+        return self.encrypted_password
 
     def __str__(self):
-        return self.service_name
+        return f"{self.site} - {self.username}"
 
 class CustomTOTPDevice(TOTPDevice):
     class Meta:
