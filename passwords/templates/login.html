@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in</title>
+    {% load static %}
+    {% load widget_tweaks %}
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-sans">
+    <section class="min-h-screen flex items-center justify-center py-6 px-4 sm:px-6 lg:px-8 bg-white bg-opacity-90">
+        <div class="container h-full px-6 py-24">
+            <div class="flex h-full flex-wrap items-center justify-center lg:justify-between">
+                <!-- Left column container with background-->
+                <div class="mb-12 md:mb-0 md:w-8/12 lg:w-6/12 flex justify-start">
+                    <img src="{% static 'images/password-manager.png' %}" alt="Phone image" class="w-1/2" />
+                </div>
+
+                <!-- Right column container with form -->
+                <div class="md:w-8/12 lg:ms-6 lg:w-5/12">
+                    <form method="post">
+                        {% csrf_token %}
+                        <!-- Logo and Title -->
+                        <div class="text-center mb-6">
+                            <h2 class="text-3xl font-bold text-gray-900">Sign in</h2>
+                        </div>
+
+                        <!-- Email input -->
+                        <div class="relative mb-6">
+                            {% render_field form.username class="peer block min-h-[auto] w-full rounded-lg border border-gray-300 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="User name" %}
+                        </div>
+
+                        <!-- Password input -->
+                        <div class="relative mb-6">
+                            {% render_field form.password id="password" class="peer block min-h-[auto] w-full rounded-lg border border-gray-300 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Password" %}
+                        </div>
+
+                        <!-- Remember me checkbox -->
+                        <div class="mb-6 flex items-center justify-start">
+                            <div class="flex items-center">
+                                <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded mr-4">
+                                <label for="remember-me"style='margin-left:10px'>Remember me</label>
+                            </div>
+                        </div>
+
+                        <!-- Submit button -->
+                        <div>
+                            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded transition duration-300">
+                                Sign in
+                            </button>
+                        </div>
+
+                        <!-- Register button -->
+                        <div class="text-center text-gray-600 mt-4">
+                            <a href="{% url 'register' %}" class="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition duration-300 inline-block">
+                                Register 
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

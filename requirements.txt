@@ -1,0 +1,4 @@
+cryptography==44.0.0
+Django==5.1.4
+django_otp==1.5.4
+qrcode==7.4.2

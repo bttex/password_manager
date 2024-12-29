@@ -1,0 +1,24 @@
+<!-- filepath: /e:/Projetos/password_manager/passwords/templates/confirm_delete.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Delete</title>
+    {% load static %}
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Confirm Delete</h1>
+            <p class="mb-6 text-center">Are you sure you want to delete the password for <strong>{{ password.service_name }}</strong>?</p>
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded transition duration-300">Yes, delete</button>
+            </form>
+            <a href="{% url 'list_passwords' %}" class="block text-center text-blue-500 mt-4 hover:underline">Cancel</a>
+        </div>
+    </div>
+</body>
+</html>
