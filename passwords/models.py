@@ -40,3 +40,8 @@ class CustomTOTPDevice(TOTPDevice):
 
     def get_step(self):
         return 60
+
+    def verify_token(self, token):
+        # Certifique-se de que o passo está sendo aplicado corretamente
+        self.step = 60
+        return super().verify_token(token)

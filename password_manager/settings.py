@@ -53,10 +53,7 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
     'two_factor',
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    'django.contrib.humanize',  # Adicione esta linha
 ]
 
 MIDDLEWARE = [
@@ -68,7 +65,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_otp.middleware.OTPMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'password_manager.urls'
@@ -84,6 +80,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',  # Adicione esta linha
             ],
         },
     },
@@ -156,14 +153,11 @@ AUTHENTICATION_BACKENDS = (
 # Configurações do django-allauth
 SITE_ID = 1
 
-# Configurações do django-two-factor-auth
-TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.fake.Fake'
-TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.fake.Fake'
 
 # Ativar suporte para o TOTP do django-otp
 OTP_TOTP = True
 
 # Você pode personalizar o período de validade do código TOTP se necessário
-OTP_TOTP_STEP = 60 # Tempo em segundos entre a mudança de um código (default: 30)
+OTP_TOTP_STEP = 60  # Tempo em segundos entre a mudança de um código (default: 30)
 OTP_TOTP_DIGITS = 6  # Número de dígitos do código TOTP (default: 6)
-OTP_TOTP_INTERVAL = 60
+OTP_TOTP_INTERVAL = 60  # Certifique-se de que esta configuração está correta

@@ -1,22 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    {% load static %}
-    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <!-- ...existing code... -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        });
+    </script>
 </head>
-<body class="bg-gray-100">
+<body class="bg-base-200">
     <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-            <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Welcome to the Password Manager</h1>
-            <div class="flex flex-col space-y-4">
-                <a href="{% url 'list_passwords' %}" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded text-center transition duration-300">View Passwords</a>
-                <a href="{% url 'add_password' %}" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded text-center transition duration-300">Add Password</a>
-                <a href="{% url 'logout' %}" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded text-center transition duration-300">Logout</a>
+        <div class="card w-full max-w-md bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h1 class="card-title text-center">Bem-vindo ao Gerenciador de Senhas</h1>
+                <div class="flex flex-col space-y-4">
+                    <a href="{% url 'list_passwords' %}" class="btn btn-primary w-full">Ver Senhas</a>
+                    <a href="{% url 'add_password' %}" class="btn btn-success w-full">Adicionar Senha</a>
+                    <a href="{% url 'logout' %}" class="btn btn-error w-full">Sair</a>
+                </div>
             </div>
         </div>
     </div>
 </body>
 </html>
+{% endblock %}

@@ -1,23 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    {% load static %}
-    <link href="{% static 'css/output.css' %}" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-            <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Register</h1>
-            <form method="post" class="space-y-4">
+{% extends "base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="min-h-screen flex flex-col items-center justify-center">
+    <!-- Logo -->
+    <div class="mb-6">
+        <img src="{% static 'images/password-manager.png' %}" alt="Logo" class="w-8 h-8" />
+    </div>
+
+    <!-- Card com formulário -->
+    <div class="card w-96 bg-base-100 shadow-xl">
+        <div class="card-body">
+            <form method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded transition duration-300">Register</button>
+                <div class="text-center mb-6">
+                    <h2 class="card-title justify-center">Registrar</h2>
+                </div>
+
+                <div class="form-control w-full">
+                    {% render_field form.username class="input input-bordered w-full" placeholder="Nome de Usuário" %}
+                </div>
+
+                <div class="form-control w-full mt-4">
+                    {% render_field form.password1 class="input input-bordered w-full" placeholder="Senha" %}
+                </div>
+
+                <div class="form-control w-full mt-4">
+                    {% render_field form.password2 class="input input-bordered w-full" placeholder="Confirmar Senha" %}
+                </div>
+
+                <div class="form-control mt-6">
+                    <button type="submit" class="btn btn-primary w-full">
+                        Registrar
+                    </button>
+                </div>
+
+                <div class="form-control mt-4">
+                    <a href="{% url 'login' %}" class="btn btn-outline w-full">
+                        Voltar para Login
+                    </a>
+                </div>
             </form>
-            <a href="{% url 'login' %}" class="block text-center text-blue-500 mt-4 hover:underline">Login</a>
         </div>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

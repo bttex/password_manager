@@ -77,8 +77,17 @@ def totp_verify(request):
     
     if request.method == 'POST':
         totp_code = request.POST.get('totp_code')
+        print(f"TOTP Code recebido: {totp_code}")  # Debug
+        
         if device and device.verify_token(totp_code):
+            print("TOTP verificado com sucesso")  # Debug
             return redirect('home')
+        else:
+            print("Falha na verificação TOTP")  # Debug
+            if not device:
+                print("Dispositivo não encontrado")
+            elif not device.verify_token(totp_code):
+                print("Código inválido")
     
     return render(request, 'totp_verify.html')
 
@@ -131,7 +140,7 @@ def delete_password(request, pk):
     if request.method == 'POST':
         password.delete()
         return redirect('list_passwords')
-    return render(request, 'delete_password.html', {'password': password})
+    return render(request, 'confirm_delete.html', {'password': password})
 
 # ...existing code...
 

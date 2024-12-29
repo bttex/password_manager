@@ -1,24 +1,29 @@
 <!-- filepath: /e:/Projetos/password_manager/passwords/templates/confirm_delete.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirm Delete</title>
-    {% load static %}
-    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <!-- ...existing code... -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        });
+    </script>
 </head>
-<body class="bg-gray-100">
-    <div class="min-h-screen flex items-center justify-center">
-        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-            <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Confirm Delete</h1>
-            <p class="mb-6 text-center">Are you sure you want to delete the password for <strong>{{ password.service_name }}</strong>?</p>
-            <form method="post" class="space-y-4">
-                {% csrf_token %}
-                <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded transition duration-300">Yes, delete</button>
-            </form>
-            <a href="{% url 'list_passwords' %}" class="block text-center text-blue-500 mt-4 hover:underline">Cancel</a>
-        </div>
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center">
+    <div class="bg-base-100 p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-3xl font-bold mb-6 text-center text-base-content">{% trans "Confirm Delete" %}</h1>
+        <p class="mb-6 text-center">{% blocktrans %}Are you sure you want to delete the password for <strong>{{ password.service_name }}</strong>?{% endblocktrans %}</p>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-error w-full bg-red-500 hover:bg-red-700 text-white">{% trans "Yes, delete" %}</button>
+        </form>
+        <a href="{% url 'list_passwords' %}" class="block text-center link link-primary mt-4 text-blue-500 hover:text-blue-700">{% trans "Cancel" %}</a>
     </div>
-</body>
-</html>
+</div>
+{% endblock %}

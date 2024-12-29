@@ -1,30 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify TOTP</title>
-    {% load static %}
-    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <!-- ...existing code... -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        });
+    </script>
 </head>
-<body class="bg-gray-50 font-sans">
-    <section class="min-h-screen flex items-center justify-center py-6 px-4 sm:px-6 lg:px-8 bg-white bg-opacity-90">
+<body class="bg-base-200">
+    {% block content %}
+    <section class="min-h-screen flex items-center justify-center py-6 px-4 sm:px-6 lg:px-8 bg-base-100">
         <div class="container h-full px-6 py-24">
             <div class="flex h-full flex-wrap items-center justify-center">
                 <div class="md:w-8/12 lg:w-5/12">
                     <form method="post">
                         {% csrf_token %}
                         <div class="text-center mb-6">
-                            <h2 class="text-3xl font-bold text-gray-900">Verify TOTP Code</h2>
+                            <h2 class="text-3xl font-bold text-base-content">Verificar Código TOTP</h2>
                         </div>
                         <div class="mb-6">
                             <input type="text" name="totp_code" 
-                                   class="peer block min-h-[auto] w-full rounded-lg border border-gray-300 bg-transparent px-3 py-[0.32rem] leading-[2.15]"
-                                   placeholder="Enter TOTP Code">
+                                   class="input input-bordered w-full"
+                                   placeholder="Digite o Código TOTP">
                         </div>
                         <div class="mb-6">
-                            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded transition duration-300">
-                                Verify
+                            <button type="submit" class="btn btn-primary w-full">
+                                Verificar
                             </button>
                         </div>
                     </form>
@@ -32,5 +38,6 @@
             </div>
         </div>
     </section>
+    {% endblock %}
 </body>
 </html>
