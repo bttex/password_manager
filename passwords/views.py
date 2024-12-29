@@ -12,6 +12,8 @@ import qrcode
 from io import BytesIO
 from django.http import HttpResponse
 import base64
+from django.contrib.auth.models import User
+from .forms import UserRegistrationForm
 
 def login_view(request):
     if request.method == 'POST':
@@ -137,12 +139,12 @@ def delete_password(request, pk):
 
 def register_view(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            # Especificar o backend
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return redirect('totp_setup')
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password1'])
+            user.save()
+            return redirect('login')
     else:
-        form = UserCreationForm()
+        form = UserRegistrationForm()
     return render(request, 'register.html', {'form': form})
