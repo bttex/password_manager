@@ -1,8 +1,1 @@
-{
-  "name": "Password Manager",
-  "theme_color": "#000000",
-  "background_color": "#000000",
-  "short_name": "pManager",
-  "id": "pManager",
-  "short-url":"https://password-manager-5qc7.onrender.com"
-}
+{"theme_color":"#8936FF","background_color":"#2EC6FE","orientation":"portrait","display":"standalone","dir":"left","lang":"pt-BR","name":"Password Generator","short_name":"pGenerator","start_url":"https://password-manager-5qc7.onrender.com/","scope":"https://password-manager-5qc7.onrender.com/login/?next=/","id":"https://password-manager-5qc7.onrender.com/home"}
