@@ -6,3 +6,4 @@ qrcode==7.4.2
 gunicorn
 django-widget-tweaks
 psycopg2
+whitenoise
