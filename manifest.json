@@ -3,5 +3,6 @@
   "theme_color": "#000000",
   "background_color": "#000000",
   "short_name": "pManager",
-  "id": "pManager"
+  "id": "pManager",
+  "short-url":"https://password-manager-5qc7.onrender.com"
 }
