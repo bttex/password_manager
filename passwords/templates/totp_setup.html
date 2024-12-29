@@ -13,15 +13,23 @@
                     </div>
                     <div class="mb-6">
                         <p class="text-base-content mb-4">Escaneie este código QR com seu aplicativo autenticador:</p>
-                        <img src="{{ qr_code }}" alt="QR Code" class="mx-auto">
-                        <input type="text" name="totp_code" 
-                               class="mt-4 input input-bordered w-full"
-                               placeholder="Digite o Código TOTP para verificar">
-                    </div>
-                    <div class="mb-6">
-                        <button type="submit" class="btn btn-primary w-full">
-                            Verificar e Habilitar TOTP
-                        </button>
+                        {% if qr_code %}
+                            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" class="mx-auto">
+                            <input type="text" name="totp_code" 
+                                   class="mt-4 input input-bordered w-full"
+                                   placeholder="Digite o Código TOTP para verificar">
+                            <button type="submit" name="verify_totp" class="btn btn-primary w-full mt-4">
+                                Verificar e Habilitar TOTP
+                            </button>
+                        {% else %}
+                            <p class="text-base-content mb-4">Clique no botão abaixo para gerar o QR Code.</p>
+                            <button type="submit" name="generate_qr" class="btn btn-primary w-full">
+                                Gerar QR Code
+                            </button>
+                        {% endif %}
+                        {% if error %}
+                            <p class="text-red-500 mt-2">{{ error }}</p>
+                        {% endif %}
                     </div>
                 </form>
             </div>

@@ -8,6 +8,10 @@ from passwords.forms import PasswordForm
 from django.contrib.auth.forms import UserCreationForm
 from passwords.models import Password
 from .models import CustomTOTPDevice
+import qrcode
+from io import BytesIO
+from django.http import HttpResponse
+import base64
 
 def login_view(request):
     if request.method == 'POST':
@@ -27,67 +31,54 @@ def login_view(request):
 
 @login_required
 def totp_setup(request):
-    if user_has_device(request.user):
-        return redirect('home')
-    
-    device = CustomTOTPDevice.objects.filter(user=request.user).first()
-    if not device:
-        device = CustomTOTPDevice.objects.create(
-            user=request.user, 
-            name='default',
-            step=60,
-            t0=0,
-            digits=6,
-            tolerance=0
-        )
-        device.save()
-    
     if request.method == 'POST':
-        totp_code = request.POST.get('totp_code')
-        if device.verify_token(totp_code):
+        if 'generate_qr' in request.POST:
+            device = CustomTOTPDevice.objects.create(
+                user=request.user,
+                name='default',
+                step=30,  # Configurar para 30 segundos
+                t0=0,
+                digits=6,
+                tolerance=1
+            )
             device.confirmed = True
             device.save()
-            return redirect('home')
+
+            # Gera QR code
+            qr = qrcode.QRCode(version=1, box_size=10, border=5)
+            qr.add_data(device.config_url)
+            qr.make(fit=True)
+
+            # Salva QR code como imagem
+            img = qr.make_image(fill_color="black", back_color="white")
+            buffer = BytesIO()
+            img.save(buffer, format="PNG")
+            img_str = base64.b64encode(buffer.getvalue()).decode()
+
+            return render(request, 'totp_setup.html', {'qr_code': img_str})
+        
+        elif 'verify_totp' in request.POST:
+            device = CustomTOTPDevice.objects.filter(user=request.user).first()
+            totp_code = request.POST.get('totp_code')
+            
+            if device and device.verify_token(totp_code):
+                return redirect('home')
+            else:
+                return render(request, 'totp_setup.html', {'error': 'Código TOTP inválido'})
     
-    # Gerar QR code
-    import qrcode
-    import qrcode.image
-    import base64
-    from io import BytesIO
-    
-    # Criar QR code
-    qr = qrcode.QRCode(version=1, box_size=10, border=5)
-    qr.add_data(device.config_url)
-    qr.make(fit=True)
-    
-    # Converter para imagem base64
-    img = qr.make_image(fill_color="black", back_color="white")
-    buffered = BytesIO()
-    img.save(buffered, format="PNG")
-    qr_code = base64.b64encode(buffered.getvalue()).decode()
-    
-    return render(request, 'totp_setup.html', {
-        'device': device,
-        'qr_code': f"data:image/png;base64,{qr_code}"
-    })
+    return render(request, 'totp_setup.html')
 
 @login_required
 def totp_verify(request):
-    device = TOTPDevice.objects.filter(user=request.user).first()
+    device = CustomTOTPDevice.objects.filter(user=request.user).first()
     
     if request.method == 'POST':
         totp_code = request.POST.get('totp_code')
-        print(f"TOTP Code recebido: {totp_code}")  # Debug
         
         if device and device.verify_token(totp_code):
-            print("TOTP verificado com sucesso")  # Debug
             return redirect('home')
         else:
-            print("Falha na verificação TOTP")  # Debug
-            if not device:
-                print("Dispositivo não encontrado")
-            elif not device.verify_token(totp_code):
-                print("Código inválido")
+            return render(request, 'totp_verify.html', {'error': 'Invalid TOTP code'})
     
     return render(request, 'totp_verify.html')
 
