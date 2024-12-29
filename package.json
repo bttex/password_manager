@@ -100,7 +100,7 @@
   },
 "scripts": {
   "build": "tailwindcss build /static/css/input.css -o static/css/output.css",
-  "dev": "tailwindcss -o static/css/styles.css --watch"
+  "dev": "tailwindcss -o static/css/output.css --watch"
 },
   "keywords": [],
   "author": "",
