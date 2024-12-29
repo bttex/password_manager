@@ -98,10 +98,10 @@
     "wrap-ansi-cjs": "^7.0.0",
     "yaml": "^2.6.1"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build:css": "tailwindcss -i ./static/css/tailwind.css -o ./static/css/output.css --watch"
-  },
+"scripts": {
+  "build": "tailwindcss build /static/css/input.css -o static/css/output.css",
+  "dev": "tailwindcss -o static/css/styles.css --watch"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
