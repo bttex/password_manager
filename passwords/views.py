@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django_otp import user_has_device
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from passwords.forms import PasswordForm
 from django.contrib.auth.forms import UserCreationForm
 from passwords.models import Password
@@ -14,6 +14,8 @@ from django.http import HttpResponse
 import base64
 from django.contrib.auth.models import User
 from .forms import UserRegistrationForm
+from django.contrib import messages
+import csv
 
 def login_view(request):
     if request.method == 'POST':
@@ -148,3 +150,76 @@ def register_view(request):
     else:
         form = UserRegistrationForm()
     return render(request, 'register.html', {'form': form})
+
+# Função para verificar se o usuário é um administrador
+def is_admin(user):
+    return user.is_superuser
+
+@login_required
+@user_passes_test(is_admin)
+def manage_users(request):
+    users = User.objects.all()  # Pega todos os usuários
+
+    if request.method == 'POST':
+        if 'delete_user' in request.POST:
+            user_id = request.POST.get('user_id')
+            user_to_delete = get_object_or_404(User, pk=user_id)
+            if user_to_delete != request.user:  # Não permitir excluir o próprio usuário
+                user_to_delete.delete()
+                messages.success(request, f'O usuário {user_to_delete.username} foi excluído com sucesso!')
+            else:
+                messages.error(request, 'Você não pode excluir seu próprio usuário.')
+
+        elif 'make_admin' in request.POST:
+            user_id = request.POST.get('user_id')
+            user_to_promote = get_object_or_404(User, pk=user_id)
+            if not user_to_promote.is_superuser:
+                user_to_promote.is_superuser = True
+                user_to_promote.is_staff = True  # Torna o usuário também um "staff"
+                user_to_promote.save()
+                messages.success(request, f'O usuário {user_to_promote.username} foi promovido a Admin!')
+            else:
+                messages.warning(request, 'Este usuário já é um Admin.')
+
+        elif 'delete_totp' in request.POST:
+            user_id = request.POST.get('user_id')
+            user_to_clear_totp = get_object_or_404(User, pk=user_id)
+
+            # Deletar a chave TOTP do usuário
+            try:
+                # Busca o dispositivo TOTP associado ao usuário
+                totp_device = TOTPDevice.objects.get(user=user_to_clear_totp)
+                totp_device.delete()  # Deleta o dispositivo TOTP
+                messages.success(request, f'A chave TOTP do usuário {user_to_clear_totp.username} foi removida com sucesso!')
+            except TOTPDevice.DoesNotExist:
+                messages.warning(request, f'O usuário {user_to_clear_totp.username} não tem chave TOTP.')
+
+    return render(request, 'manage_users.html', {'users': users})
+
+
+@login_required
+def export_passwords(request):
+    # Obtenha todos os dados de senhas
+    passwords = Password.objects.all()
+
+    # Crie a resposta HTTP para o CSV
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="senhas.csv"'
+
+    # Crie o writer para escrever no arquivo CSV
+    writer = csv.writer(response)
+    
+    # Escreva o cabeçalho (os nomes das colunas)
+    writer.writerow(['ID', 'Usuário', 'Senha', 'Criado em', 'Modificado em'])  # Customize conforme seus campos
+
+    # Escreva os dados de cada senha
+    for password in passwords:
+        writer.writerow([password.id, password.user.username, password.password, password.created_at, password.updated_at])  # Customize conforme seus campos
+
+    return response
+
+@login_required
+def home(request):
+    # Determina se o usuário é admin (superuser ou staff)
+    is_admin = request.user.is_superuser or request.user.is_staff
+    return render(request, 'home.html', {'is_admin': is_admin})

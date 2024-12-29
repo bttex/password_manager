@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto mt-10">
+    <h1 class="text-3xl font-bold mb-4">Gerenciamento de Usuários</h1>
+    <table class="table-auto w-full border-collapse border border-gray-200">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="border border-gray-300 px-4 py-2">ID</th>
+                <th class="border border-gray-300 px-4 py-2">Username</th>
+                <th class="border border-gray-300 px-4 py-2">Email</th>
+                <th class="border border-gray-300 px-4 py-2">Admin</th>
+                <th class="border border-gray-300 px-4 py-2">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td class="border border-gray-300 px-4 py-2">{{ user.id }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ user.username }}</td>
+                <td class="border border-gray-300 px-4 py-2">{{ user.email }}</td>
+                <td class="border border-gray-300 px-4 py-2">
+                    {% if user.is_superuser %}
+                    <span class="text-green-500 font-bold">Sim</span>
+                    {% else %}
+                    <span class="text-red-500 font-bold">Não</span>
+                    {% endif %}
+                </td>
+                <td class="border border-gray-300 px-4 py-2">
+                    <a href="{% url 'delete_user' user.id %}" 
+                       class="bg-red-500 text-white px-3 py-1 rounded">Deletar</a>
+                    <a href="{% url 'remove_otp' user.id %}" 
+                       class="bg-blue-500 text-white px-3 py-1 rounded">Remover OTP</a>
+                    <a href="{% url 'toggle_admin' user.id %}" 
+                       class="bg-yellow-500 text-white px-3 py-1 rounded">
+                       {% if user.is_superuser %} Remover Admin {% else %} Tornar Admin {% endif %}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

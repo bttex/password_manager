@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Usuários</title>
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        });
+    </script>
+</head>
+<body class="bg-base-200">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-base-100 p-8 rounded-lg shadow-lg w-full max-w-4xl relative">
+            <!-- Ícone de Voltar dentro do container da tabela -->
+            <a href="{% url 'home' %}" class="absolute top-4 left-4 inline-flex items-center space-x-2 text-primary hover:text-blue-600">
+                <!-- Ícone de Voltar com tamanho ajustado -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 5l-7 7 7 7"></path>
+                </svg>
+            </a>
+
+            <h1 class="text-3xl font-bold mb-6 text-center text-base-content">Gerenciar Usuários</h1>
+
+            <!-- Mensagens de Sucesso e Erro -->
+            {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Tabela de Usuários -->
+            <table class="table w-full bg-base-100 border border-base-300 mt-10">
+                <thead>
+                    <tr class="bg-base-300">
+                        <th class="py-2 px-4 border-b">Nome de Usuário</th>
+                        <th class="py-2 px-4 border-b">Email</th>
+                        <th class="py-2 px-4 border-b">Permissões</th>
+                        <th class="py-2 px-4 border-b">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td class="border px-4 py-2">{{ user.username }}</td>
+                            <td class="border px-4 py-2">{{ user.email }}</td>
+                            <td class="border px-4 py-2">
+                                {% if user.is_superuser %}
+                                    <span class="badge badge-success">Admin</span>
+                                {% else %}
+                                    <span class="badge badge-warning">Usuário</span>
+                                {% endif %}
+                            </td>
+                            <td class="border px-4 py-2">
+                                <form method="POST" action="{% url 'manage_users' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="user_id" value="{{ user.id }}">
+
+                                    <!-- Tornar Admin -->
+                                    {% if not user.is_superuser %}
+                                        <button type="submit" name="make_admin" class="btn btn-primary bg-blue-500 hover:bg-blue-700 text-white">Tornar Admin</button>
+                                    {% else %}
+                                        <button type="button" class="btn btn-disabled" disabled>Já é Admin</button>
+                                    {% endif %}
+
+                                    <!-- Excluir Usuário -->
+                                    {% if user != request.user %}
+                                        <button type="submit" name="delete_user" class="btn btn-danger bg-red-500 hover:bg-red-700 text-white">Excluir</button>
+                                    {% else %}
+                                        <button type="button" class="btn btn-disabled" disabled>Não pode excluir</button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

@@ -5,11 +5,7 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
-
-    
-    <!-- ...código existente... -->
     <link href="{% static 'css/output.css' %}" rel="stylesheet">
-    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const currentTheme = localStorage.getItem('theme') || 'light';
@@ -21,10 +17,17 @@
     <div class="min-h-screen flex items-center justify-center">
         <div class="card w-full max-w-md bg-base-100 shadow-xl">
             <div class="card-body">
-                <h1 class="card-title text-center">Bem-vindo ao Gerenciador de Senhas</h1>
+                <h1 class="card-title text-center">Bem-vindo(a), {{ request.user.username }}</h1>
                 <div class="flex flex-col space-y-4">
-                    <a href="{% url 'list_passwords' %}" class="btn btn-primary w-full">Ver Senhas</a>
+                    <!-- Opção para listar senhas -->
+                    <a href="{% url 'list_passwords' %}" class="btn btn-primary w-full">Minhas Senhas</a>
+                    <!-- Opção para adicionar senhas -->
                     <a href="{% url 'add_password' %}" class="btn btn-success w-full">Adicionar Senha</a>
+                    <!-- Exibe apenas para administradores -->
+                    {% if is_admin %}
+                        <a href="{% url 'manage_users' %}" class="btn btn-warning w-full">Gerenciar Usuários</a>
+                    {% endif %}
+                    <!-- Opção de sair -->
                     <a href="{% url 'logout' %}" class="btn btn-error w-full">Sair</a>
                 </div>
             </div>
