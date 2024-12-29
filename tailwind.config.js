@@ -2,14 +2,15 @@
 module.exports = {
   content: [
     './passwords/templates/**/*.html',
+    './templates/**/*.html',  // caso tenha templates na raiz
     './passwords/static/**/*.js',
+    './static/**/*.js'
   ],
   theme: {
     extend: {},
   },
   plugins: [require("daisyui")],
   daisyui: {
-    themes: ["light", "dark"], // temas que serão disponíveis
+    themes: ["light", "dark"]
   }
 }
-

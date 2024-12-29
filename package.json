@@ -98,10 +98,11 @@
     "wrap-ansi-cjs": "^7.0.0",
     "yaml": "^2.6.1"
   },
-"scripts": {
-  "build": "tailwindcss build static/css/input.css  -o static/css/output.css",
-  "dev": "tailwindcss -o static/css/output.css --watch"
-},
+    "scripts": {
+      "build": "tailwindcss -i static/css/input.css -o static/css/output.css --minify",
+      "dev": "tailwindcss -i static/css/input.css -o static/css/output.css --watch"
+    },
+  
   "keywords": [],
   "author": "",
   "license": "ISC",

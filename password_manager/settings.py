@@ -20,9 +20,11 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -63,6 +65,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',  # Certifique-se de que este middleware está incluído
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -170,3 +173,5 @@ OTP_TOTP = True
 OTP_TOTP_STEP = 30  # Tempo em segundos entre a mudança de um código (default: 30)
 OTP_TOTP_DIGITS = 6  # Número de dígitos do código TOTP (default: 6)
 OTP_TOTP_INTERVAL = 30  # Certifique-se de que esta configuração está correta
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
