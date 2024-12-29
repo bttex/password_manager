@@ -99,7 +99,7 @@
     "yaml": "^2.6.1"
   },
 "scripts": {
-  "build": "tailwindcss build /static/css/input.css -o static/css/output.css",
+  "build": "tailwindcss build static/css/input.css  -o static/css/output.css",
   "dev": "tailwindcss -o static/css/output.css --watch"
 },
   "keywords": [],
