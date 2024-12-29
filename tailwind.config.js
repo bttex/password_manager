@@ -4,7 +4,8 @@ module.exports = {
     './passwords/templates/**/*.html',
     './templates/**/*.html',  // caso tenha templates na raiz
     './passwords/static/**/*.js',
-    './static/**/*.js'
+    './static/**/*.js',
+    './static/js/**/*.js', 
   ],
   theme: {
     extend: {},

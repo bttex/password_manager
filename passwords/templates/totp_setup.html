@@ -37,3 +37,27 @@
     </div>
 </section>
 {% endblock %}
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <!-- Manifest PWA -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    
+    <!-- Meta Tags PWA -->
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="Gerenciador de Senhas PWA">
+
+    <!-- Script para registrar o Service Worker -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        });
+
+
+    </script>
+</head>
+<body class="bg-base-200">
+</body>
+</html>

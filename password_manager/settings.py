@@ -20,11 +20,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -32,7 +27,7 @@ STATICFILES_DIRS = [
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['password-manager-5qc7.onrender.com',
                  'localhost',
@@ -59,6 +54,7 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_totp',
     'django.contrib.sites',
     'django.contrib.humanize',  # Adicione esta linha
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -145,9 +141,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+# Diretórios onde o Django vai procurar arquivos estáticos (como JS, CSS, imagens)
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # A pasta 'static' está dentro do diretório do projeto
+
+# Diretório onde os arquivos estáticos compilados são armazenados (necessário em produção)
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -174,4 +174,27 @@ OTP_TOTP_STEP = 30  # Tempo em segundos entre a mudança de um código (default:
 OTP_TOTP_DIGITS = 6  # Número de dígitos do código TOTP (default: 6)
 OTP_TOTP_INTERVAL = 30  # Certifique-se de que esta configuração está correta
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if DEBUG:
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+PWA_APP_NAME = "Password Manager"
+PWA_APP_DESCRIPTION = "A fantastic Passowrd Manager Web App"
+PWA_APP_THEME_COLOR = "#007bff"
+PWA_APP_BACKGROUND_COLOR = "#ffffff"
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'portrait'
+PWA_APP_START_URL = '/'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/images/password-manager.png',
+        'sizes': '160x160'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': '/static/images/password-manager.png',
+        'sizes': '160x160'
+    }
+]
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'static/js', 'serviceworker.js')
