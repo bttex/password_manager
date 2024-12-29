@@ -21,13 +21,10 @@ from django.conf.urls.static import static
 from django.views.decorators.cache import cache_page
 from pwa import views as pwa_views
 from django.shortcuts import render
-def offline(request):
-    return render(request, 'offline.html')
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('passwords.urls')),
-    path('offline/', offline, name='offline'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
