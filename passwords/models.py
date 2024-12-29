@@ -39,9 +39,9 @@ class CustomTOTPDevice(TOTPDevice):
         proxy = True
 
     def get_step(self):
-        return 60
+        return 30
 
     def verify_token(self, token):
         # Certifique-se de que o passo está sendo aplicado corretamente
-        self.step = 60
+        self.step = 30
         return super().verify_token(token)

@@ -93,10 +93,16 @@ WSGI_APPLICATION = 'password_manager.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+   'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),  # Nome do banco
+        'USER': os.getenv('DB_USER'),  # Usuário do banco
+        'PASSWORD': os.getenv('DB_PASSWORD'),  # Senha do banco
+        'HOST': os.getenv('DB_HOST'),  # Host (endereço)
+        'PORT': os.getenv('DB_PORT', '5432'),  # Porta (padrão: 5432)
+        'OPTIONS': {
+    'client_encoding': 'UTF8',
+    },}
 }
 
 
@@ -158,6 +164,6 @@ SITE_ID = 1
 OTP_TOTP = True
 
 # Você pode personalizar o período de validade do código TOTP se necessário
-OTP_TOTP_STEP = 60  # Tempo em segundos entre a mudança de um código (default: 30)
+OTP_TOTP_STEP = 30  # Tempo em segundos entre a mudança de um código (default: 30)
 OTP_TOTP_DIGITS = 6  # Número de dígitos do código TOTP (default: 6)
-OTP_TOTP_INTERVAL = 60  # Certifique-se de que esta configuração está correta
+OTP_TOTP_INTERVAL = 30  # Certifique-se de que esta configuração está correta
