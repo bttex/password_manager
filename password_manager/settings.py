@@ -51,7 +51,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'django_otp',
     'django_otp.plugins.otp_totp',
-    'two_factor',
     'django.contrib.sites',
     'django.contrib.humanize',  # Adicione esta linha
 ]
