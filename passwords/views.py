@@ -12,10 +12,12 @@ import qrcode
 from io import BytesIO
 from django.http import HttpResponse
 import base64
+from django.http import JsonResponse
 from django.contrib.auth.models import User
 from .forms import UserRegistrationForm
 from django.contrib import messages
 import csv
+from django.contrib.auth.hashers import make_password
 
 def login_view(request):
     if request.method == 'POST':
@@ -66,7 +68,7 @@ def totp_setup(request):
             totp_code = request.POST.get('totp_code')
             
             if device and device.verify_token(totp_code):
-                return redirect('home')
+                return redirect('list_passwords')
             else:
                 return render(request, 'totp_setup.html', {'error': 'Código TOTP inválido'})
     
@@ -80,7 +82,7 @@ def totp_verify(request):
         totp_code = request.POST.get('totp_code')
         
         if device and device.verify_token(totp_code):
-            return redirect('home')
+            return redirect('list_passwords')
         else:
             return render(request, 'totp_verify.html', {'error': 'Invalid TOTP code'})
     
@@ -103,17 +105,43 @@ def list_passwords(request):
 
 @login_required
 def add_password(request):
-    if request.method == 'POST':
-        form = PasswordForm(request.POST)
-        if form.is_valid():
-            password = form.save(commit=False)
-            password.user = request.user
-            password.save()
-            return redirect('list_passwords')
-    else:
-        form = PasswordForm()
-    return render(request, 'add_password.html', {'form': form})
+    if request.method == "POST":
+        # Pegue os dados enviados pelo formulário
+        service_name = request.POST.get('service_name')  # Nome do serviço
+        username = request.POST.get('username')  # Nome de usuário (login)
+        password = request.POST.get('password_value')  # Senha
 
+        # Verifique se todos os campos foram preenchidos
+        if not service_name or not username or not password:
+            messages.error(request, "Campos obrigatórios ausentes!")
+            return redirect('add_password')  # Redireciona de volta para a página de adicionar senha
+
+        # Crie o objeto Password e associe ao usuário atual
+        new_password = Password(
+            user=request.user,  # Associe ao usuário logado
+            service_name=service_name,  # Nome do serviço
+            username=username,  # Nome de usuário
+        )
+        
+        # Chame o método `set_password` para criptografar a senha antes de armazená-la
+        new_password.set_password(password)
+
+        try:
+            # Salve o objeto Password no banco de dados
+            new_password.save()
+
+            # Mensagem de sucesso para ser exibida
+            messages.success(request, "Senha adicionada com sucesso!")
+
+            # Redirecionar para a página de listagem de senhas
+            return redirect('list_passwords')  # Altere 'password_list' para o nome correto da URL de listagem de senhas
+
+        except Exception as e:
+            messages.error(request, "Erro ao adicionar a senha: " + str(e))
+            return redirect('add_password')  # Redireciona de volta para a página de adicionar senha em caso de erro
+
+    # Se a requisição for GET, exibe o formulário de adição de senha
+    return render(request, 'add_password.html')
 
 @login_required
 def edit_password(request, pk):

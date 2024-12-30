@@ -30,16 +30,29 @@ class RegisterForm(UserCreationForm):
         'class': 'mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
     }))
 
+
 class PasswordForm(forms.ModelForm):
     class Meta:
         model = Password
-        fields = ['site', 'username', 'encrypted_password']
+        fields = ['service_name', 'username', 'encrypted_password']
         labels = {
-            'site': 'Site',
-            'username': 'Username',
-            'encrypted_password': 'Password'
+            'service_name': 'Nome do Serviço',
+            'username': 'Login',
+            'encrypted_password': 'Senha'
         }
 
+    def save(self, commit=True):
+        instance = super().save(commit=False)  # Cria a instância do objeto sem salvar no banco ainda
+        instance.service_name = self.cleaned_data['site']  # Garante que o campo 'site' seja salvo
+        instance.username = self.cleaned_data['username']  # Garante que o campo 'username' seja salvo
+        raw_password = self.cleaned_data['encrypted_password']
+        instance.set_password(raw_password)  # Criptografa a senha antes de salvar
+        if commit:
+            instance.save()  # Salva o objeto no banco de dados
+        return instance  # Correção do erro de digitação
+    
+    
+    
 class UserRegistrationForm(forms.ModelForm):
     password1 = forms.CharField(label='Senha', widget=forms.PasswordInput)
     password2 = forms.CharField(label='Confirme a Senha', widget=forms.PasswordInput)

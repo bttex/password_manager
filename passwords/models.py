@@ -18,21 +18,24 @@ class Password(models.Model):
         on_delete=models.CASCADE,
         related_name='stored_passwords'
     )
-    site = models.CharField(max_length=100)
+    service_name = models.CharField(max_length=100)  # Alterado para service_name
     username = models.CharField(max_length=100)
     encrypted_password = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def set_password(self, raw_password):
+        # Criptografando a senha e armazenando de forma segura
         encrypted_password = cipher_suite.encrypt(raw_password.encode())
-        self.encrypted_password = base64.urlsafe_b64encode(encrypted_password).decode()
+        self.encrypted_password = encrypted_password.decode()  # Armazena como string
 
     def get_password(self):
-        return self.encrypted_password
+        # Descriptografando a senha
+        decrypted_password = cipher_suite.decrypt(self.encrypted_password.encode())
+        return decrypted_password.decode()
 
     def __str__(self):
-        return f"{self.site} - {self.username}"
+        return f"{self.service_name} - {self.username}"
 
 class CustomTOTPDevice(TOTPDevice):
     class Meta:
