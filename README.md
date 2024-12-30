@@ -1,14 +1,19 @@
 # Password Manager
 
-Gerenciador de senhas seguro construído com Django e Tailwind CSS. Oferece autenticação de dois fatores (TOTP) e criptografia para armazenamento seguro de senhas.
+Gerenciador de senhas seguro construído com Django e Tailwind CSS + DaisyUI. Oferece autenticação de dois fatores (TOTP) e criptografia para armazenamento seguro de senhas.
 
 ## 🚀 Tecnologias
 
 - Python 3.x
-- Django
+- Django 5.1.4
 - Tailwind CSS
-- django-otp (Two-Factor Authentication)
-- SQLite
+- DaisyUI
+- django-otp 1.5.4 (Two-Factor Authentication)
+- cryptography 44.0.0
+- python-dotenv 1.0.1
+- qrcode 7.4.2
+- django-widget-tweaks
+- SQLite / PostgreSQL
 
 ## 📋 Pré-requisitos
 
@@ -52,10 +57,26 @@ http://127.0.0.1:8000
 
 - Autenticação de dois fatores (TOTP)
 - Armazenamento seguro de senhas
-- Interface responsiva com Tailwind CSS
+- Interface responsiva com Tailwind CSS e DaisyUI
+- Tema claro e escuro
+- Componentes interativos (dropdowns e modais)
 - Criptografia de dados sensíveis
 - Gerenciamento de múltiplas senhas
 - QR Code para configuração TOTP
+
+## 📸 Exemplos
+
+### Tela de Login
+
+| Tema Claro | Tema Escuro |
+|------------|-------------|
+| ![Login Tema Claro](docs/Sign-in-light.png) | ![Login Tema Escuro](docs/Sign-in-dark.png) |
+
+### Componentes Interativos
+
+| Dropdown | Modal |
+|----------|-------|
+| ![Exemplo Dropdown](docs/dropdown.gif) | ![Exemplo Modal](docs/modal.gif) |
 
 ## 🛠️ Desenvolvimento
 
@@ -74,4 +95,3 @@ npm run dev
 ## 📝 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
