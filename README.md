@@ -13,7 +13,7 @@ Gerenciador de senhas seguro construído com Django e Tailwind CSS + DaisyUI. Of
 - python-dotenv 1.0.1
 - qrcode 7.4.2
 - django-widget-tweaks
-- SQLite / PostgreSQL
+- PostgreSQL
 
 ## 📋 Pré-requisitos
 
